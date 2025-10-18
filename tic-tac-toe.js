@@ -2,25 +2,26 @@
 window.addEventListener('DOMContentLoaded', () => {
     const squares = document.querySelectorAll('#board div');
     const status = document.getElementById('status');
+    const newGameBtn = document.querySelector('.btn');
+
     let currentPlayer = 'X';
     let boardState = Array(9).fill(null);
     let gameOver = false;
 
-    // Define all winning combinations
     const winningCombos = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [0, 3, 6], [1, 4, 7], [2, 5, 8],
         [0, 4, 8], [2, 4, 6]
     ];
 
-    // Add square styling
+    // --- Task 1: style the board ---
     squares.forEach(square => {
         square.classList.add('square');
     });
 
-    // Add event listeners
+    // --- Task 2–4: handle game logic ---
     squares.forEach((square, index) => {
-        // Handle click
+        // Click handler
         square.addEventListener('click', () => {
             if (!gameOver && !square.textContent) {
                 square.textContent = currentPlayer;
@@ -37,17 +38,34 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Hover effects
+        // Hover handlers
         square.addEventListener('mouseenter', () => {
             square.classList.add('hover');
         });
-
         square.addEventListener('mouseleave', () => {
             square.classList.remove('hover');
         });
     });
 
-    // Function to check for a winner
+    // --- Task 5: Reset / New Game ---
+    newGameBtn.addEventListener('click', () => {
+        // Clear board
+        squares.forEach(square => {
+            square.textContent = '';
+            square.classList.remove('X', 'O', 'hover');
+        });
+
+        // Reset variables
+        boardState = Array(9).fill(null);
+        currentPlayer = 'X';
+        gameOver = false;
+
+        // Reset status text and style
+        status.textContent = 'Move your mouse over a square and click to play an X or an O.';
+        status.classList.remove('you-won');
+    });
+
+    // --- Helper function to check win condition ---
     function checkWinner(player) {
         return winningCombos.some(combo => {
             return combo.every(index => boardState[index] === player);
